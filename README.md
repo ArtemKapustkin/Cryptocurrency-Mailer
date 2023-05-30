@@ -30,7 +30,7 @@ This endpoints specifically designed for fetching market data, including ticker 
 # API Endpoints
 
 ### Rate
-* **Get** localhost:3000/rate
+* **Get** localhost:3000/api/rate
   
     Get current cryptocurrency exchange rate
 
@@ -42,7 +42,7 @@ This endpoints specifically designed for fetching market data, including ticker 
 
 ### Mailer
 
-* **Post** localhost:3000/sendEmails
+* **Post** localhost:3000/api/sendEmails
 
     Parameteres
 
@@ -52,7 +52,7 @@ This endpoints specifically designed for fetching market data, including ticker 
     * 500 - Bad Request
 
 
-* **Post** localhost:3000/subscribe
+* **Post** localhost:3000/api/subscribe
 
     Parameteres
 

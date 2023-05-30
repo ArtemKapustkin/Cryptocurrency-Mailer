@@ -15,27 +15,26 @@ import (
 )
 
 func main() {
-
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	app := fiber.New()
 	cryptoParser := parser.NewBinanceCryptoParser()
+	mailer := mailer.NewMailer("smtp.gmail.com", "587")
 
 	subscriberReposity := repository.NewSubscriberFileRepository(os.Getenv("EMAILSFILEPATH"))
-	mailer := mailer.NewMailer("smtp.gmail.com", "587")
 
 	mailerService := service.NewMailerService(subscriberReposity, mailer)
 
 	rateHandler := handler.NewRateHandler(cryptoParser)
-	app.Get("/rate", rateHandler.GetExchangeRate)
-
 	mailerHandler := handler.NewMailerHandler(mailerService, cryptoParser, subscriberReposity, validator.New())
-	app.Post("/sendEmails", mailerHandler.SendExchangeRate)
 
-	app.Post("/subscribe", mailerHandler.Subscribe)
+	app := fiber.New()
+	api := app.Group("/api")
+
+	api.Get("/rate", rateHandler.GetExchangeRate)
+	api.Post("/subscribe", mailerHandler.Subscribe)
+	api.Post("/sendEmails", mailerHandler.SendExchangeRate)
 
 	if err := app.Listen(":3000"); err != nil {
 		log.Fatal(err)
